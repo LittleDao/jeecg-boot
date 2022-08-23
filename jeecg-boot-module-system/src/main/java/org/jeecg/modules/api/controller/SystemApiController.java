@@ -660,4 +660,14 @@ public class SystemApiController {
         return this.sysBaseApi.getTemplateContent(code);
     }
 
+    /**
+     * 获得有效租户列表
+     * @param tenantIds 查询Id列表，多值用“,”隔开
+     * @return
+     */
+    @GetMapping("/getEffectTenants")
+    String getEffectTenants(@RequestParam("tenantIds") String tenantIds){
+        return this.sysBaseApi.getEffectTenants(tenantIds);
+    }
+
 }
