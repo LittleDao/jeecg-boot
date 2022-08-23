@@ -1,18 +1,16 @@
 package org.jeecg.modules.demo.report.entity;
 
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.jeecgframework.poi.excel.annotation.Excel;
-import org.jeecg.common.aspect.annotation.Dict;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import org.jeecgframework.poi.excel.annotation.Excel;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.io.Serializable;
 
 /**
  * @Description: 投资计划上报
@@ -68,7 +66,7 @@ public class InvestPlanReport implements Serializable {
 	/**上报年度*/
 	@Excel(name = "上报年度", width = 15)
     @ApiModelProperty(value = "上报年度")
-    private java.lang.Integer year;
+    private java.lang.String year;
 	/**版本号*/
 	@Excel(name = "版本号", width = 15)
     @ApiModelProperty(value = "版本号")

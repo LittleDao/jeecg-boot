@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.jeecg.common.constant.CommonConstant;
 import org.jeecg.common.exception.JeecgBootException;
+import org.jeecg.common.util.DateUtils;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.system.entity.*;
 import org.jeecg.modules.system.mapper.SysTenantMapper;
@@ -43,7 +44,12 @@ public class SysTenantServiceImpl extends ServiceImpl<SysTenantMapper, SysTenant
         LambdaQueryWrapper<SysTenant> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(SysTenant::getId, idList);
         queryWrapper.eq(SysTenant::getStatus, Integer.valueOf(CommonConstant.STATUS_1));
-        //此处查询忽略时间条件
+        //查询时间条件,未设置有效期的认为无效
+        String now = DateUtils.now();
+        //租户开始时间beginDate
+        queryWrapper.le(SysTenant::getBeginDate,now);
+        //结束时间endDate
+        queryWrapper.gt(SysTenant::getEndDate,now);
         return super.list(queryWrapper);
     }
 

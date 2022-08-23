@@ -47,5 +47,6 @@ public interface IInvestPlanReportService extends IService<InvestPlanReport> {
 	 * @param idList
 	 */
 	public void delBatchMain (Collection<? extends Serializable> idList);
-	
+
+
 }

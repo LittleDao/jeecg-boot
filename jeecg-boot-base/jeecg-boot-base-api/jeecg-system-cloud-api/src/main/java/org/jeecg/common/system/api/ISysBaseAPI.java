@@ -549,4 +549,13 @@ public interface ISysBaseAPI extends CommonAPI {
      */
     @GetMapping("/sys/api/getTemplateContent")
     String getTemplateContent(@RequestParam("code") String code);
+
+    /**
+     * 获得有效租户列表
+     * @param tenantIds 查询Id列表，多值用“,”隔开
+     * @return
+     */
+    @GetMapping("/sys/api/getEffectTenants")
+    String getEffectTenants(@RequestParam("tenantIds") String tenantIds);
+
 }

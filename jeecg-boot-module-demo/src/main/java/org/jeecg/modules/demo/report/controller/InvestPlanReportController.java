@@ -1,48 +1,51 @@
 package org.jeecg.modules.demo.report.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.shiro.SecurityUtils;
+import org.jeecg.common.api.dto.message.BusMessageDTO;
+import org.jeecg.common.api.vo.Result;
+import org.jeecg.common.aspect.annotation.AutoLog;
+import org.jeecg.common.system.api.ISysBaseAPI;
+import org.jeecg.common.system.query.QueryGenerator;
+import org.jeecg.common.system.vo.LoginUser;
+import org.jeecg.common.util.SysAnnmentTypeEnum;
+import org.jeecg.common.util.oConvertUtils;
+import org.jeecg.modules.demo.investment.entity.FixedAssetsInvestment;
+import org.jeecg.modules.demo.investment.service.IFixedAssetsInvestmentService;
+import org.jeecg.modules.demo.report.entity.InvestPlanRelationDetail;
+import org.jeecg.modules.demo.report.entity.InvestPlanReport;
+import org.jeecg.modules.demo.report.entity.InvestPlanSubRelationDetail;
+import org.jeecg.modules.demo.report.service.IInvestPlanRelationDetailService;
+import org.jeecg.modules.demo.report.service.IInvestPlanReportService;
+import org.jeecg.modules.demo.report.service.IInvestPlanSubRelationDetailService;
+import org.jeecg.modules.demo.report.vo.InvestPlanReportPage;
 import org.jeecgframework.poi.excel.ExcelImportUtil;
 import org.jeecgframework.poi.excel.def.NormalExcelConstants;
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.ImportParams;
 import org.jeecgframework.poi.excel.view.JeecgEntityExcelView;
-import org.jeecg.common.system.vo.LoginUser;
-import org.apache.shiro.SecurityUtils;
-import org.jeecg.common.api.vo.Result;
-import org.jeecg.common.system.query.QueryGenerator;
-import org.jeecg.common.util.oConvertUtils;
-import org.jeecg.modules.demo.report.entity.InvestPlanRelationDetail;
-import org.jeecg.modules.demo.report.entity.InvestPlanSubRelationDetail;
-import org.jeecg.modules.demo.report.entity.InvestPlanReport;
-import org.jeecg.modules.demo.report.vo.InvestPlanReportPage;
-import org.jeecg.modules.demo.report.service.IInvestPlanReportService;
-import org.jeecg.modules.demo.report.service.IInvestPlanRelationDetailService;
-import org.jeecg.modules.demo.report.service.IInvestPlanSubRelationDetailService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import lombok.extern.slf4j.Slf4j;
-import com.alibaba.fastjson.JSON;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.jeecg.common.aspect.annotation.AutoLog;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
  /**
  * @Description: 投资计划上报
@@ -274,5 +277,35 @@ public class InvestPlanReportController {
       }
       return Result.OK("文件导入失败！");
     }
+	@Resource
+	 IFixedAssetsInvestmentService fixedAssetsInvestmentService;
+	 @Resource
+	 private ISysBaseAPI sysBaseAPI;
+
+	 /**
+	  * 一键通知
+	  *
+	  * @param projectIds
+	  * @return
+	  */
+	 //@AutoLog(value = "关联下级年度投资计划通过主表ID查询")
+	 @ApiOperation(value="一键通知", notes="一键通知")
+	 @PostMapping(value = "/noticeAll")
+	 public Result<String> noticeAll(@RequestParam("projectIds") String projectIds) {
+//		 investPlanReportService.delMain(reportId);
+		 if(StringUtils.isNotEmpty(projectIds)){
+			 String[] split = projectIds.split(",");
+			 for (String s : split) {
+				 FixedAssetsInvestment investment = fixedAssetsInvestmentService.getById(s);
+				 if(ObjectUtils.isNotEmpty(investment)){
+					 String personInCharge = investment.getPersonInCharge();
+					 //发送消息，设置为工作流消息
+					 BusMessageDTO busMessageDTO = new BusMessageDTO("system", personInCharge, "一键通知", "投资计划！", "1", SysAnnmentTypeEnum.INVESTMENT.getType(), investment.getId());
+					 sysBaseAPI.sendBusAnnouncement( busMessageDTO);
+				 }
+			 }
+		 }
+		 return Result.OK();
+	 }
 
 }

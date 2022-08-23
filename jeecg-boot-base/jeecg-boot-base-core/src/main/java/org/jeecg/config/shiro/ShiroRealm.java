@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -142,8 +143,9 @@ public class ShiroRealm extends AuthorizingRealm {
             String contextTenantId = TenantContext.getTenant();
             String str ="0";
             if(oConvertUtils.isNotEmpty(contextTenantId) && !str.equals(contextTenantId)){
+                String effectTenants = Optional.ofNullable(commonApi.getEffectTenants(userTenantIds)).orElse("");
                 //update-begin-author:taoyan date:20211227 for: /issues/I4O14W 用户租户信息变更判断漏洞
-                String[] arr = userTenantIds.split(",");
+                String[] arr = effectTenants.split(",");
                 if(!oConvertUtils.isIn(contextTenantId, arr)){
                     throw new AuthenticationException("用户租户信息变更,请重新登陆!");
                 }

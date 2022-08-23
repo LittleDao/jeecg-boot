@@ -289,6 +289,12 @@ public class SysBaseAPIFallback implements ISysBaseAPI {
     }
 
     @Override
+    public String getEffectTenants(String tenantIds) {
+        log.error("获取租户信息失败了 {}", cause);
+        return null;
+    }
+
+    @Override
     public void sendEmailMsg(String email,String title,String content) {
 
     }

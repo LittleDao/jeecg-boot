@@ -1,17 +1,16 @@
 package org.jeecg.modules.demo.report.entity;
 
-import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.jeecgframework.poi.excel.annotation.Excel;
-import java.util.Date;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.io.UnsupportedEncodingException;
+import lombok.Data;
+import org.jeecgframework.poi.excel.annotation.Excel;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.io.Serializable;
 
 /**
  * @Description: 投资计划关联年度投资计划
@@ -56,6 +55,10 @@ public class InvestPlanRelationDetail implements Serializable {
 	@Excel(name = "上报单位ID", width = 15)
     @ApiModelProperty(value = "上报单位ID")
     private java.lang.String reportUnitId;
+    /**项目编码*/
+    @Excel(name = "项目Id", width = 15)
+    @ApiModelProperty(value = "项目Id")
+    private java.lang.String projectId;
 	/**项目编码*/
 	@Excel(name = "项目编码", width = 15)
     @ApiModelProperty(value = "项目编码")

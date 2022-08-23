@@ -50,6 +50,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Description: 底层共通业务API，提供其他独立模块调用
@@ -101,6 +102,8 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 	ISysCategoryService sysCategoryService;
 	@Autowired
 	private ISysUserService sysUserService;
+	@Resource
+	ISysTenantService sysTenantService;
 
 	@Override
 	//@SensitiveDecode
@@ -1219,6 +1222,23 @@ public class SysBaseApiImpl implements ISysBaseAPI {
 			return null;
 		}
 		return list.get(0).getTemplateContent();
+	}
+
+	@Override
+	public String getEffectTenants(String tenantIds) {
+		String[] split = tenantIds.split(",");
+		List<Integer> idList = new ArrayList<>();
+		for (String s : split) {
+			 if(StringUtils.isNotEmpty(s)){
+				 idList.add(Integer.valueOf(s));
+			 }
+		}
+		if(idList.size()>0){
+			List<SysTenant> sysTenants = Optional.ofNullable(sysTenantService.queryEffectiveTenant(idList))
+					.orElseGet(()->new ArrayList<>());
+			return sysTenants.stream().map(V -> String.valueOf(V.getId())).collect(Collectors.joining(","));
+		}
+		return null;
 	}
 	//-------------------------------------流程节点发送模板消息-----------------------------------------------
 

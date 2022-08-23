@@ -127,4 +127,11 @@ public interface CommonAPI {
      */
     List<DictModel> translateDictFromTableByKeys(String table, String text, String code, String keys);
 
+    /**
+     * 查询有效的租户列表
+     * @param tenantIds
+     * @return
+     */
+    String getEffectTenants(String tenantIds);
+
 }

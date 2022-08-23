@@ -94,5 +94,6 @@ public class InvestPlanReportServiceImpl extends ServiceImpl<InvestPlanReportMap
 			investPlanReportMapper.deleteById(id);
 		}
 	}
-	
+
+
 }

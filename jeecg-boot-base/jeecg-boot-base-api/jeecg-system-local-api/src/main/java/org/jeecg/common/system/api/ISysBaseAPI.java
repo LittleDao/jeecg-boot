@@ -351,4 +351,11 @@ public interface ISysBaseAPI extends CommonAPI {
      */
     String getTemplateContent(String templateCode);
 
+    /**
+     * 从tenantIds选择有效的tenantId
+     * @param tenantIds
+     * @return
+     */
+    String getEffectTenants(String tenantIds);
+
 }
