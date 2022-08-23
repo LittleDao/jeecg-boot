@@ -1,7 +1,9 @@
 package org.jeecg.modules.demo.report.service;
 
-import org.jeecg.modules.demo.report.entity.InvestPlanRelationDetail;
+import org.jeecg.modules.demo.report.entity.FileCatetory;
 import org.jeecg.modules.demo.report.entity.InvestPlanSubRelationDetail;
+import org.jeecg.modules.demo.report.entity.InvestPlanRelationDetail;
+import org.jeecg.modules.demo.report.entity.FileList;
 import org.jeecg.modules.demo.report.entity.InvestPlanReport;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.io.Serializable;
@@ -20,19 +22,21 @@ public interface IInvestPlanReportService extends IService<InvestPlanReport> {
 	 * 添加一对多
 	 *
 	 * @param investPlanReport
-	 * @param investPlanRelationDetailList
 	 * @param investPlanSubRelationDetailList
+	 * @param investPlanRelationDetailList
+	 * @param fileListList
 	 */
-	public void saveMain(InvestPlanReport investPlanReport,List<InvestPlanRelationDetail> investPlanRelationDetailList,List<InvestPlanSubRelationDetail> investPlanSubRelationDetailList) ;
+	public void saveMain(InvestPlanReport investPlanReport,List<InvestPlanSubRelationDetail> investPlanSubRelationDetailList,List<InvestPlanRelationDetail> investPlanRelationDetailList,List<FileList> fileListList) ;
 	
 	/**
 	 * 修改一对多
 	 *
 	 * @param investPlanReport
-	 * @param investPlanRelationDetailList
 	 * @param investPlanSubRelationDetailList
+	 * @param investPlanRelationDetailList
+	 * @param fileListList
 	 */
-	public void updateMain(InvestPlanReport investPlanReport,List<InvestPlanRelationDetail> investPlanRelationDetailList,List<InvestPlanSubRelationDetail> investPlanSubRelationDetailList);
+	public void updateMain(InvestPlanReport investPlanReport,List<InvestPlanSubRelationDetail> investPlanSubRelationDetailList,List<InvestPlanRelationDetail> investPlanRelationDetailList,List<FileList> fileListList);
 	
 	/**
 	 * 删除一对多
@@ -48,5 +52,11 @@ public interface IInvestPlanReportService extends IService<InvestPlanReport> {
 	 */
 	public void delBatchMain (Collection<? extends Serializable> idList);
 
-
+	/**
+	 * 归档功能
+	 *
+	 * @param investPlanSubRelationDetailList
+	 */
+	public void savePlaceFile(List<FileCatetory> investPlanSubRelationDetailList);
+	
 }

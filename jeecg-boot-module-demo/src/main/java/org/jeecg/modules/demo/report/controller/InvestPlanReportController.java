@@ -19,9 +19,12 @@ import org.jeecg.common.util.SysAnnmentTypeEnum;
 import org.jeecg.common.util.oConvertUtils;
 import org.jeecg.modules.demo.investment.entity.FixedAssetsInvestment;
 import org.jeecg.modules.demo.investment.service.IFixedAssetsInvestmentService;
+import org.jeecg.modules.demo.report.entity.FileCatetory;
 import org.jeecg.modules.demo.report.entity.InvestPlanRelationDetail;
+import org.jeecg.modules.demo.report.entity.FileList;
 import org.jeecg.modules.demo.report.entity.InvestPlanReport;
 import org.jeecg.modules.demo.report.entity.InvestPlanSubRelationDetail;
+import org.jeecg.modules.demo.report.service.IFileListService;
 import org.jeecg.modules.demo.report.service.IInvestPlanRelationDetailService;
 import org.jeecg.modules.demo.report.service.IInvestPlanReportService;
 import org.jeecg.modules.demo.report.service.IInvestPlanSubRelationDetailService;
@@ -64,6 +67,8 @@ public class InvestPlanReportController {
 	private IInvestPlanRelationDetailService investPlanRelationDetailService;
 	@Autowired
 	private IInvestPlanSubRelationDetailService investPlanSubRelationDetailService;
+	 @Autowired
+	 private IFileListService fileListService;
 	
 	/**
 	 * 分页列表查询
@@ -99,7 +104,7 @@ public class InvestPlanReportController {
 	public Result<String> add(@RequestBody InvestPlanReportPage investPlanReportPage) {
 		InvestPlanReport investPlanReport = new InvestPlanReport();
 		BeanUtils.copyProperties(investPlanReportPage, investPlanReport);
-		investPlanReportService.saveMain(investPlanReport, investPlanReportPage.getInvestPlanRelationDetailList(),investPlanReportPage.getInvestPlanSubRelationDetailList());
+		investPlanReportService.saveMain(investPlanReport, investPlanReportPage.getInvestPlanSubRelationDetailList(),investPlanReportPage.getInvestPlanRelationDetailList(),investPlanReportPage.getFileListList());
 		return Result.OK("添加成功！");
 	}
 	
@@ -119,7 +124,7 @@ public class InvestPlanReportController {
 		if(investPlanReportEntity==null) {
 			return Result.error("未找到对应数据");
 		}
-		investPlanReportService.updateMain(investPlanReport, investPlanReportPage.getInvestPlanRelationDetailList(),investPlanReportPage.getInvestPlanSubRelationDetailList());
+		investPlanReportService.updateMain(investPlanReport, investPlanReportPage.getInvestPlanSubRelationDetailList(),investPlanReportPage.getInvestPlanRelationDetailList(),investPlanReportPage.getFileListList());
 		return Result.OK("编辑成功!");
 	}
 	
@@ -195,6 +200,19 @@ public class InvestPlanReportController {
 		List<InvestPlanSubRelationDetail> investPlanSubRelationDetailList = investPlanSubRelationDetailService.selectByMainId(id);
 		return Result.OK(investPlanSubRelationDetailList);
 	}
+	 /**
+	  * 通过id查询
+	  *
+	  * @param id
+	  * @return
+	  */
+	 //@AutoLog(value = "附件列表通过主表ID查询")
+	 @ApiOperation(value="附件列表主表ID查询", notes="附件列表-通主表ID查询")
+	 @GetMapping(value = "/queryFileListByMainId")
+	 public Result<List<FileList>> queryFileListListByMainId(@RequestParam(name="id",required=true) String id) {
+		 List<FileList> fileListList = fileListService.selectByMainId(id);
+		 return Result.OK(fileListList);
+	 }
 
     /**
     * 导出excel
@@ -261,7 +279,7 @@ public class InvestPlanReportController {
               for (InvestPlanReportPage page : list) {
                   InvestPlanReport po = new InvestPlanReport();
                   BeanUtils.copyProperties(page, po);
-                  investPlanReportService.saveMain(po, page.getInvestPlanRelationDetailList(),page.getInvestPlanSubRelationDetailList());
+				  investPlanReportService.saveMain(po, page.getInvestPlanSubRelationDetailList(),page.getInvestPlanRelationDetailList(),page.getFileListList());
               }
               return Result.OK("文件导入成功！数据行数:" + list.size());
           } catch (Exception e) {
@@ -305,6 +323,35 @@ public class InvestPlanReportController {
 				 }
 			 }
 		 }
+		 return Result.OK();
+	 }
+
+
+	 /**
+	  * 归档功能
+	  *
+	  * @param fileIds
+	  * @param cateId
+	  * @return
+	  */
+	 //@AutoLog(value = "附件列表通过主表ID查询")
+	 @ApiOperation(value="归档功能", notes="归档功能")
+	 @GetMapping(value = "/placeToFile")
+	 public Result<String> placeToFile(@RequestParam(name="fileIds",required=true) String fileIds, @RequestParam(name="cateId",required=true) String cateId) {
+
+		 if(StringUtils.isNotEmpty(fileIds) && StringUtils.isNotEmpty(cateId)){
+			 String[] fileIdsSplit = fileIds.split(",");
+			 List<FileCatetory> list = new ArrayList<>();
+			 //新建归档记录
+			 for(String s : fileIdsSplit){
+				 FileCatetory fileCatetory = new FileCatetory();
+				 fileCatetory.setFileName(s);
+				 fileCatetory.setCateId(cateId);
+				 list.add(fileCatetory);
+			 }
+			 investPlanReportService.savePlaceFile(list);
+		 }
+
 		 return Result.OK();
 	 }
 
