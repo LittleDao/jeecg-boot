@@ -1,6 +1,7 @@
 package org.jeecg.modules.demo.report.vo;
 
 import java.util.List;
+import org.jeecg.modules.demo.report.entity.FileList;
 import org.jeecg.modules.demo.report.entity.InvestPlanReport;
 import org.jeecg.modules.demo.report.entity.InvestPlanRelationDetail;
 import org.jeecg.modules.demo.report.entity.InvestPlanSubRelationDetail;
@@ -122,5 +123,8 @@ public class InvestPlanReportPage {
 	@ExcelCollection(name="关联下级年度投资计划")
 	@ApiModelProperty(value = "关联下级年度投资计划")
 	private List<InvestPlanSubRelationDetail> investPlanSubRelationDetailList;
+	@ExcelCollection(name="附件列表")
+	@ApiModelProperty(value = "附件列表")
+	private List<FileList> fileListList;
 
 }
