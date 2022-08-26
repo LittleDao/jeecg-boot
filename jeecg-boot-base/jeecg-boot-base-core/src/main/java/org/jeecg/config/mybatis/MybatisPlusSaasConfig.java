@@ -36,6 +36,7 @@ public class MybatisPlusSaasConfig {
 
     static {
         TENANT_TABLE.add("fixed_assets_investment");
+        TENANT_TABLE.add("authority_rule_test");
 
 //        //角色、菜单、部门
         TENANT_TABLE.add("sys_user");

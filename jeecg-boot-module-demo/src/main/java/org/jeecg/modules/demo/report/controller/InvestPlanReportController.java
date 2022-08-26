@@ -341,17 +341,33 @@ public class InvestPlanReportController {
 
 		 if(StringUtils.isNotEmpty(fileIds) && StringUtils.isNotEmpty(cateId)){
 			 String[] fileIdsSplit = fileIds.split(",");
+			 List<String> ids =new ArrayList<>();
+			 for (String s : fileIdsSplit) {
+				 ids.add(s);
+			 }
+			 if(ids.size()==0){
+				 return Result.error("参数错误");
+			 }
+			 List<FileList> fileLists = fileListService.selectByIds(ids);
+			 if(fileLists.size()==0){
+				 return Result.error("获取数据异常，请刷新页面重试");
+			 }
 			 List<FileCatetory> list = new ArrayList<>();
-			 //新建归档记录
-			 for(String s : fileIdsSplit){
+			 fileLists.stream().forEach(V->{
 				 FileCatetory fileCatetory = new FileCatetory();
-				 fileCatetory.setFileName(s);
+				 String fileName = V.getFileName();
+				 if(StringUtils.isEmpty(fileName)&&StringUtils.isNotEmpty(V.getFileUp())){
+					//从文件路径中获得名称
+					 int i = V.getFileUp().lastIndexOf("\\/");
+					 fileName = i<0?V.getFileUp():V.getFileUp().substring(i);
+				 }
+				 fileCatetory.setFileName(fileName);
+				 fileCatetory.setFilePath(V.getFileUp());
 				 fileCatetory.setCateId(cateId);
 				 list.add(fileCatetory);
-			 }
+			 });
 			 investPlanReportService.savePlaceFile(list);
 		 }
-
 		 return Result.OK();
 	 }
 

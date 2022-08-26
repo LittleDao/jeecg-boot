@@ -15,7 +15,7 @@ public enum SysAnnmentTypeEnum {
     BPM("bpm", "url", "/bpm/task/MyTaskList"),
 
     /**
-     * 工作流跳转链接我的办公
+     * 跳转
      */
     INVESTMENT("investment", "url", "/investment/fixedAssetsInvestmentList");
 

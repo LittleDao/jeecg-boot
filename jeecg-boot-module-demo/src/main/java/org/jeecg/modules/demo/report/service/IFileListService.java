@@ -19,4 +19,8 @@ public interface IFileListService extends IService<FileList> {
 	 * @return List<FileList>
 	 */
 	public List<FileList> selectByMainId(String mainId);
+	/**
+	 * 根据Id列表查询列表
+	 */
+	List<FileList> selectByIds(List<String> ids);
 }

@@ -1,7 +1,6 @@
 package org.jeecg.modules.demo.report.service.impl;
 
-import javax.annotation.Resource;
-import org.jeecg.modules.demo.feign.FeignTest;
+
 import org.jeecg.modules.demo.report.entity.FileCatetory;
 import org.jeecg.modules.demo.report.entity.InvestPlanReport;
 import org.jeecg.modules.demo.report.entity.InvestPlanSubRelationDetail;
